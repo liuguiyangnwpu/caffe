@@ -280,8 +280,10 @@ ifeq ($(OSX), 1)
 	ifneq ($(CPU_ONLY), 1)
 		CUDA_VERSION := $(shell $(CUDA_DIR)/bin/nvcc -V | grep -o 'release [0-9.]*' | tr -d '[a-z ]')
 		ifeq ($(shell echo | awk '{exit $(CUDA_VERSION) < 7.0;}'), 1)
-			CXXFLAGS += -stdlib=libstdc++
-			LINKFLAGS += -stdlib=libstdc++
+			#CXXFLAGS += -stdlib=libstdc++
+			#LINKFLAGS += -stdlib=libstdc++
+			CXXFLAGS 
+			LINKFLAGS 
 		endif
 		# clang throws this warning for cuda headers
 		WARNINGS += -Wno-unneeded-internal-declaration
@@ -421,7 +423,7 @@ CXXFLAGS += -MMD -MP
 
 # Complete build flags.
 COMMON_FLAGS += $(foreach includedir,$(INCLUDE_DIRS),-I$(includedir))
-CXXFLAGS += -pthread -fPIC $(COMMON_FLAGS) $(WARNINGS)
+CXXFLAGS += -pthread -fPIC $(COMMON_FLAGS) $(WARNINGS) -std=c++11
 NVCCFLAGS += -ccbin=$(CXX) -Xcompiler -fPIC $(COMMON_FLAGS)
 # mex may invoke an older gcc that is too liberal with -Wuninitalized
 MATLAB_CXXFLAGS := $(CXXFLAGS) -Wno-uninitialized

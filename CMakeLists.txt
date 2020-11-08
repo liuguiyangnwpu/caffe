@@ -27,20 +27,17 @@ include(cmake/Summary.cmake)
 include(cmake/ConfigGen.cmake)
 
 # ---[ Options
-caffe_option(CPU_ONLY  "Build Caffe without CUDA support" OFF) # TODO: rename to USE_CUDA
-caffe_option(USE_CUDNN "Build Caffe with cuDNN library support" ON IF NOT CPU_ONLY)
+caffe_option(CPU_ONLY  "Build Caffe without CUDA support" ON) # TODO: rename to USE_CUDA
 caffe_option(USE_NCCL "Build Caffe with NCCL library support" OFF)
 caffe_option(BUILD_SHARED_LIBS "Build shared libraries" ON)
-caffe_option(BUILD_python "Build Python wrapper" ON)
-set(python_version "2" CACHE STRING "Specify which Python version to use")
-caffe_option(BUILD_matlab "Build Matlab wrapper" OFF IF UNIX OR APPLE)
-caffe_option(BUILD_docs   "Build documentation" ON IF UNIX OR APPLE)
-caffe_option(BUILD_python_layer "Build the Caffe Python layer" ON)
+#set(python_version "3" CACHE STRING "Specify which Python version to use")
+#caffe_option(BUILD_python_layer "Build the Caffe Python layer" ON)
 caffe_option(USE_OPENCV "Build with OpenCV support" ON)
 caffe_option(USE_LEVELDB "Build with levelDB" ON)
 caffe_option(USE_LMDB "Build with lmdb" ON)
 caffe_option(ALLOW_LMDB_NOLOCK "Allow MDB_NOLOCK when reading LMDB files (only if necessary)" OFF)
 caffe_option(USE_OPENMP "Link with OpenMP (when your BLAS wants OpenMP and you get linker errors)" OFF)
+caffe_option(USE_libstdcpp "Build with lmdb" ON)
 
 # This code is taken from https://github.com/sh1r0/caffe-android-lib
 caffe_option(USE_HDF5 "Build with hdf5" ON)
@@ -56,7 +53,8 @@ endif()
 caffe_set_caffe_link()
 
 if(USE_libstdcpp)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
+  #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libstdc++")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
   message("-- Warning: forcing libstdc++ (controlled by USE_libstdcpp option in cmake)")
 endif()
 
@@ -77,35 +75,32 @@ include_directories(${PROJECT_BINARY_DIR})
 # (cuda_compile() has per-call flags, but we set them here too for clarity)
 #
 # list(REMOVE_ITEM ...) invocations remove PRIVATE and PUBLIC keywords from collected definitions and include pathes
-if(HAVE_CUDA)
-  # pass include pathes to cuda_include_directories()
-  set(Caffe_ALL_INCLUDE_DIRS ${Caffe_INCLUDE_DIRS})
-  list(REMOVE_ITEM Caffe_ALL_INCLUDE_DIRS PRIVATE PUBLIC)
-  cuda_include_directories(${Caffe_INCLUDE_DIR} ${Caffe_SRC_DIR} ${Caffe_ALL_INCLUDE_DIRS})
-
-  # add definitions to nvcc flags directly
-  set(Caffe_ALL_DEFINITIONS ${Caffe_DEFINITIONS})
-  list(REMOVE_ITEM Caffe_ALL_DEFINITIONS PRIVATE PUBLIC)
-  list(APPEND CUDA_NVCC_FLAGS ${Caffe_ALL_DEFINITIONS})
-endif()
+#if(HAVE_CUDA)
+#  # pass include pathes to cuda_include_directories()
+#  set(Caffe_ALL_INCLUDE_DIRS ${Caffe_INCLUDE_DIRS})
+#  list(REMOVE_ITEM Caffe_ALL_INCLUDE_DIRS PRIVATE PUBLIC)
+#  cuda_include_directories(${Caffe_INCLUDE_DIR} ${Caffe_SRC_DIR} ${Caffe_ALL_INCLUDE_DIRS})
+#
+#  # add definitions to nvcc flags directly
+#  set(Caffe_ALL_DEFINITIONS ${Caffe_DEFINITIONS})
+#  list(REMOVE_ITEM Caffe_ALL_DEFINITIONS PRIVATE PUBLIC)
+#  list(APPEND CUDA_NVCC_FLAGS ${Caffe_ALL_DEFINITIONS})
+#endif()
 
 # ---[ Subdirectories
 add_subdirectory(src/gtest)
 add_subdirectory(src/caffe)
 add_subdirectory(tools)
 add_subdirectory(examples)
-add_subdirectory(python)
-add_subdirectory(matlab)
-add_subdirectory(docs)
 
 # ---[ Linter target
 add_custom_target(lint COMMAND ${CMAKE_COMMAND} -P ${PROJECT_SOURCE_DIR}/cmake/lint.cmake)
 
 # ---[ pytest target
-if(BUILD_python)
-  add_custom_target(pytest COMMAND python${python_version} -m unittest discover -s caffe/test WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/python )
-  add_dependencies(pytest pycaffe)
-endif()
+#if(BUILD_python)
+#  add_custom_target(pytest COMMAND python${python_version} -m unittest discover -s caffe/test WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/python )
+#  add_dependencies(pytest pycaffe)
+#endif()
 
 # ---[ uninstall target
 configure_file(
