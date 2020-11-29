@@ -31,17 +31,8 @@ int main(int argc, char** argv) {
                << input_filename;
     return 2;
   }
-  bool need_upgrade = SolverNeedsTypeUpgrade(solver_param);
   bool success = true;
-  if (need_upgrade) {
-    success = UpgradeSolverAsNeeded(input_filename, &solver_param);
-    if (!success) {
-      LOG(ERROR) << "Encountered error(s) while upgrading prototxt; "
-                 << "see details above.";
-    }
-  } else {
-    LOG(ERROR) << "File already in latest proto format: " << input_filename;
-  }
+  LOG(ERROR) << "File already in latest proto format: " << input_filename;
 
   // Save new format prototxt.
   WriteProtoToTextFile(solver_param, argv[2]);

@@ -25,9 +25,8 @@ void SoftmaxWithLossLayer<Dtype>::LayerSetUp(
   if (has_ignore_label_) {
     ignore_label_ = this->layer_param_.loss_param().ignore_label();
   }
-  if (!this->layer_param_.loss_param().has_normalization() &&
-      this->layer_param_.loss_param().has_normalize()) {
-    normalization_ = this->layer_param_.loss_param().normalize() ?
+  if (!this->layer_param_.loss_param().has_normalization()) {
+    normalization_ = false ?
                      LossParameter_NormalizationMode_VALID :
                      LossParameter_NormalizationMode_BATCH_SIZE;
   } else {

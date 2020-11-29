@@ -23,10 +23,6 @@ void SigmoidCrossEntropyLossLayer<Dtype>::LayerSetUp(
   }
   if (this->layer_param_.loss_param().has_normalization()) {
     normalization_ = this->layer_param_.loss_param().normalization();
-  } else if (this->layer_param_.loss_param().has_normalize()) {
-    normalization_ = this->layer_param_.loss_param().normalize() ?
-                     LossParameter_NormalizationMode_VALID :
-                     LossParameter_NormalizationMode_BATCH_SIZE;
   } else {
     normalization_ = LossParameter_NormalizationMode_BATCH_SIZE;
   }

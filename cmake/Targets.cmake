@@ -58,14 +58,11 @@ function(caffe_pickup_caffe_sources root)
   caffe_source_group("Source"         GLOB "${root}/src/caffe/*.cpp")
   caffe_source_group("Source\\Util"   GLOB "${root}/src/caffe/util/*.cpp")
   caffe_source_group("Source\\Layers" GLOB "${root}/src/caffe/layers/*.cpp")
-  caffe_source_group("Source\\Cuda"   GLOB "${root}/src/caffe/layers/*.cu")
-  caffe_source_group("Source\\Cuda"   GLOB "${root}/src/caffe/util/*.cu")
   caffe_source_group("Source\\Proto"  GLOB "${root}/src/caffe/proto/*.proto")
 
   # source groups for test target
   caffe_source_group("Include"      GLOB "${root}/include/caffe/test/test_*.h*")
   caffe_source_group("Source"       GLOB "${root}/src/caffe/test/test_*.cpp")
-  caffe_source_group("Source\\Cuda" GLOB "${root}/src/caffe/test/test_*.cu")
 
   # collect files
   file(GLOB test_hdrs    ${root}/include/caffe/test/test_*.h*)
@@ -79,26 +76,17 @@ function(caffe_pickup_caffe_sources root)
   list(APPEND srcs ${hdrs} ${PROJECT_BINARY_DIR}/caffe_config.h)
   list(APPEND test_srcs ${test_hdrs})
 
-  # collect cuda files
-  file(GLOB    test_cuda ${root}/src/caffe/test/test_*.cu)
-  file(GLOB_RECURSE cuda ${root}/src/caffe/*.cu)
-  list(REMOVE_ITEM  cuda ${test_cuda})
-
   # add proto to make them editable in IDEs too
   file(GLOB_RECURSE proto_files ${root}/src/caffe/*.proto)
   list(APPEND srcs ${proto_files})
 
   # convert to absolute paths
   caffe_convert_absolute_paths(srcs)
-  caffe_convert_absolute_paths(cuda)
   caffe_convert_absolute_paths(test_srcs)
-  caffe_convert_absolute_paths(test_cuda)
 
   # propagate to parent scope
   set(srcs ${srcs} PARENT_SCOPE)
-  set(cuda ${cuda} PARENT_SCOPE)
   set(test_srcs ${test_srcs} PARENT_SCOPE)
-  set(test_cuda ${test_cuda} PARENT_SCOPE)
 endfunction()
 
 ################################################################################################

@@ -31,17 +31,8 @@ int main(int argc, char** argv) {
                << input_filename;
     return 2;
   }
-  bool need_upgrade = NetNeedsUpgrade(net_param);
   bool success = true;
-  if (need_upgrade) {
-    success = UpgradeNetAsNeeded(input_filename, &net_param);
-    if (!success) {
-      LOG(ERROR) << "Encountered error(s) while upgrading prototxt; "
-                 << "see details above.";
-    }
-  } else {
-    LOG(ERROR) << "File already in latest proto format: " << input_filename;
-  }
+  LOG(ERROR) << "File already in latest proto format: " << input_filename;
 
   WriteProtoToBinaryFile(net_param, argv[2]);
 

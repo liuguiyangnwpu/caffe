@@ -33,8 +33,6 @@ void InfogainLossLayer<Dtype>::LayerSetUp(
     ignore_label_ = this->layer_param_.loss_param().ignore_label();
   }
   // normalization
-  CHECK(!this->layer_param_.loss_param().has_normalize())
-    << "normalize is deprecated. use \"normalization\"";
   normalization_ = this->layer_param_.loss_param().normalization();
   // matrix H
   if (bottom.size() < 3) {

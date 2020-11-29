@@ -10,7 +10,7 @@ template <typename Dtype>
 void SliceLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
   const SliceParameter& slice_param = this->layer_param_.slice_param();
-  CHECK(!(slice_param.has_axis() && slice_param.has_slice_dim()))
+  CHECK(!(slice_param.has_axis()))
       << "Either axis or slice_dim should be specified; not both.";
   slice_point_.clear();
   std::copy(slice_param.slice_point().begin(),
@@ -21,19 +21,8 @@ void SliceLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom,
 template <typename Dtype>
 void SliceLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom,
       const vector<Blob<Dtype>*>& top) {
-  const int num_axes = bottom[0]->num_axes();
   const SliceParameter& slice_param = this->layer_param_.slice_param();
-  if (slice_param.has_slice_dim()) {
-    slice_axis_ = static_cast<int>(slice_param.slice_dim());
-    // Don't allow negative indexing for slice_dim, a uint32 -- almost
-    // certainly unintended.
-    CHECK_GE(slice_axis_, 0) << "casting slice_dim from uint32 to int32 "
-        << "produced negative result; slice_dim must satisfy "
-        << "0 <= slice_dim < " << kMaxBlobAxes;
-    CHECK_LT(slice_axis_, num_axes) << "slice_dim out of range.";
-  } else {
-    slice_axis_ = bottom[0]->CanonicalAxisIndex(slice_param.axis());
-  }
+  slice_axis_ = bottom[0]->CanonicalAxisIndex(slice_param.axis());
   vector<int> top_shape = bottom[0]->shape();
   const int bottom_slice_axis = bottom[0]->shape(slice_axis_);
   num_slices_ = bottom[0]->count(0, slice_axis_);
