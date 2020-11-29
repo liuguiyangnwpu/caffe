@@ -3,7 +3,7 @@
 #  cmake -DBUILD_only_tests="common,net,blob,im2col_kernel"
 set(BUILD_only_tests "" CACHE STRING "Blank or comma-separated list of test files to build without 'test_' prefix and extension")
 caffe_leave_only_selected_tests(test_srcs ${BUILD_only_tests})
-caffe_leave_only_selected_tests(test_cuda ${BUILD_only_tests})
+#caffe_leave_only_selected_tests(test_cuda ${BUILD_only_tests})
 
 # For 'make runtest' target we don't need to embed test data paths to
 # source files, because test target is executed in source directory
