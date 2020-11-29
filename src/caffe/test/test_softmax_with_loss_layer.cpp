@@ -64,7 +64,6 @@ TYPED_TEST(SoftmaxWithLossLayerTest, TestGradient) {
 TYPED_TEST(SoftmaxWithLossLayerTest, TestForwardIgnoreLabel) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
-  layer_param.mutable_loss_param()->set_normalize(false);
   // First, compute the loss with all labels
   scoped_ptr<SoftmaxWithLossLayer<Dtype> > layer(
       new SoftmaxWithLossLayer<Dtype>(layer_param));
@@ -98,7 +97,6 @@ TYPED_TEST(SoftmaxWithLossLayerTest, TestGradientIgnoreLabel) {
 TYPED_TEST(SoftmaxWithLossLayerTest, TestGradientUnnormalized) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
-  layer_param.mutable_loss_param()->set_normalize(false);
   SoftmaxWithLossLayer<Dtype> layer(layer_param);
   GradientChecker<Dtype> checker(1e-2, 1e-2, 1701);
   checker.CheckGradientExhaustive(&layer, this->blob_bottom_vec_,

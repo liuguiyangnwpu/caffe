@@ -315,12 +315,7 @@ TYPED_TEST(DataTransformTest, TestMeanFile) {
   // Create a mean file
   string mean_file;
   MakeTempFilename(&mean_file);
-  BlobProto blob_mean;
-  blob_mean.set_num(1);
-  blob_mean.set_channels(channels);
-  blob_mean.set_height(height);
-  blob_mean.set_width(width);
-
+  BlobProto blob_mean; // [1, channels, height, width]
   for (int j = 0; j < size; ++j) {
       blob_mean.add_data(j);
   }

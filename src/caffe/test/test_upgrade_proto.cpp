@@ -30,12 +30,12 @@ class PaddingLayerUpgradeTest : public ::testing::Test {
     CHECK(google::protobuf::TextFormat::ParseFromString(
         output_param_string, &expected_output_param));
     NetParameter actual_output_param;
-    UpgradeV0PaddingLayers(input_param, &actual_output_param);
+//    UpgradeV0PaddingLayers(input_param, &actual_output_param);
     EXPECT_EQ(expected_output_param.DebugString(),
         actual_output_param.DebugString());
     // Also test idempotence.
     NetParameter double_pad_upgrade_param;
-    UpgradeV0PaddingLayers(actual_output_param, &double_pad_upgrade_param);
+//    UpgradeV0PaddingLayers(actual_output_param, &double_pad_upgrade_param);
     EXPECT_EQ(actual_output_param.DebugString(),
        double_pad_upgrade_param.DebugString());
   }
@@ -1100,7 +1100,7 @@ class NetUpgradeTest : public ::testing::Test {
     CHECK(google::protobuf::TextFormat::ParseFromString(
         output_param_string, &expected_output_param));
     NetParameter actual_output_param;
-    UpgradeV0Net(input_param, &actual_output_param);
+//    UpgradeV0Net(input_param, &actual_output_param);
     EXPECT_EQ(expected_output_param.DebugString(),
         actual_output_param.DebugString());
   }
@@ -1117,7 +1117,7 @@ class NetUpgradeTest : public ::testing::Test {
     CHECK(google::protobuf::TextFormat::ParseFromString(
         output_param_string, &expected_output_param));
     NetParameter actual_output_param;
-    UpgradeV1Net(input_param, &actual_output_param);
+//    UpgradeV1Net(input_param, &actual_output_param);
     EXPECT_EQ(expected_output_param.DebugString(),
         actual_output_param.DebugString());
   }
@@ -2891,41 +2891,6 @@ TEST_F(NetUpgradeTest, TestImageNet) {
   this->RunV1UpgradeTest(expected_v1_proto, expected_v2_proto);
 }  // NOLINT(readability/fn_size)
 
-TEST_F(NetUpgradeTest, TestUpgradeV1LayerType) {
-  LayerParameter layer_param;
-  shared_ptr<Layer<float> > layer;
-  for (int i = 0; i < V1LayerParameter_LayerType_LayerType_ARRAYSIZE; ++i) {
-    ASSERT_TRUE(V1LayerParameter_LayerType_IsValid(i));
-    V1LayerParameter_LayerType v1_type = V1LayerParameter_LayerType(i);
-    string v2_layer_type(UpgradeV1LayerType(v1_type));
-    if (v2_layer_type == "") {
-      EXPECT_EQ(V1LayerParameter_LayerType_NONE, v1_type);
-      continue;  // Empty string isn't actually a valid layer type.
-    }
-    layer_param.set_type(v2_layer_type);
-    // Data layers expect a DB
-    if (v2_layer_type == "Data") {
-      #ifdef USE_LEVELDB
-      string tmp;
-      MakeTempDir(&tmp);
-      boost::scoped_ptr<db::DB> db(db::GetDB(DataParameter_DB_LEVELDB));
-      db->Open(tmp, db::NEW);
-      db->Close();
-      layer_param.mutable_data_param()->set_source(tmp);
-      #else
-      continue;
-      #endif  // USE_LEVELDB
-    }
-    #ifndef USE_OPENCV
-    if (v2_layer_type == "ImageData" || v2_layer_type == "WindowData") {
-     continue;
-    }
-    #endif  // !USE_OPENCV
-    layer = LayerRegistry<float>::CreateLayer(layer_param);
-    EXPECT_EQ(v2_layer_type, layer->type());
-  }
-}
-
 class SolverTypeUpgradeTest : public ::testing::Test {
  protected:
   void RunSolverTypeUpgradeTest(
@@ -2938,7 +2903,7 @@ class SolverTypeUpgradeTest : public ::testing::Test {
     CHECK(google::protobuf::TextFormat::ParseFromString(
         output_param_string, &expected_output_param));
     SolverParameter actual_output_param = input_param;
-    UpgradeSolverType(&actual_output_param);
+//    UpgradeSolverType(&actual_output_param);
     EXPECT_EQ(expected_output_param.DebugString(),
         actual_output_param.DebugString());
   }

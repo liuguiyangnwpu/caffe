@@ -46,10 +46,10 @@ TYPED_TEST_CASE(DummyDataLayerTest, TestDtypes);
 TYPED_TEST(DummyDataLayerTest, TestOneTopConstant) {
   LayerParameter param;
   DummyDataParameter* dummy_data_param = param.mutable_dummy_data_param();
-  dummy_data_param->add_num(5);
-  dummy_data_param->add_channels(3);
-  dummy_data_param->add_height(2);
-  dummy_data_param->add_width(4);
+//  dummy_data_param->add_num(5);
+//  dummy_data_param->add_channels(3);
+//  dummy_data_param->add_height(2);
+//  dummy_data_param->add_width(4);
   this->blob_top_vec_.resize(1);
   DummyDataLayer<TypeParam> layer(param);
   layer.SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
@@ -75,14 +75,14 @@ TYPED_TEST(DummyDataLayerTest, TestOneTopConstant) {
 TYPED_TEST(DummyDataLayerTest, TestTwoTopConstant) {
   LayerParameter param;
   DummyDataParameter* dummy_data_param = param.mutable_dummy_data_param();
-  dummy_data_param->add_num(5);
-  dummy_data_param->add_channels(3);
-  dummy_data_param->add_height(2);
-  dummy_data_param->add_width(4);
-  dummy_data_param->add_num(5);
+//  dummy_data_param->add_num(5);
+//  dummy_data_param->add_channels(3);
+//  dummy_data_param->add_height(2);
+//  dummy_data_param->add_width(4);
+//  dummy_data_param->add_num(5);
   // Don't explicitly set number of channels or height for 2nd top blob; should
   // default to first channels and height (as we check later).
-  dummy_data_param->add_height(1);
+//  dummy_data_param->add_height(1);
   FillerParameter* data_filler_param = dummy_data_param->add_data_filler();
   data_filler_param->set_value(7);
   this->blob_top_vec_.resize(2);
@@ -113,10 +113,10 @@ TYPED_TEST(DummyDataLayerTest, TestTwoTopConstant) {
 TYPED_TEST(DummyDataLayerTest, TestThreeTopConstantGaussianConstant) {
   LayerParameter param;
   DummyDataParameter* dummy_data_param = param.mutable_dummy_data_param();
-  dummy_data_param->add_num(5);
-  dummy_data_param->add_channels(3);
-  dummy_data_param->add_height(2);
-  dummy_data_param->add_width(4);
+//  dummy_data_param->add_num(5);
+//  dummy_data_param->add_channels(3);
+//  dummy_data_param->add_height(2);
+//  dummy_data_param->add_width(4);
   FillerParameter* data_filler_param_a = dummy_data_param->add_data_filler();
   data_filler_param_a->set_value(7);
   FillerParameter* data_filler_param_b = dummy_data_param->add_data_filler();
